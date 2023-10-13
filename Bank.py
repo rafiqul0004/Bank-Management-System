@@ -5,6 +5,7 @@ class Bank:
         self.users = []
         self.admins = []
         self.is_loan_able = True
+        self.bankrupt=False
         self.total_loan = 0
         self.bank_blance = 0
 
@@ -42,6 +43,10 @@ class Bank:
             return f'Loan is Enabled'
         else:
             return f'Loan is Disabled'
+    
+
+    def off_deposit(self):
+        self.bankrupt=not self.bankrupt
 
     def find_user(self, account_number):
         for user in self.users:
@@ -83,10 +88,13 @@ class User(Person):
 
     def withdraw(self, amount, bank):
         if amount <= self.balance:
-            self.balance -= amount
-            self.transition_withdraw += amount
-            bank.bank_blance -= amount
-            return f'Your withdrawal : {amount} \n Current Balance:{self.balance}'
+            if bank.bankrupt==False:
+                self.balance -= amount
+                self.transition_withdraw += amount
+                bank.bank_blance -= amount
+                return f'Your withdrawal : {amount} \n Current Balance:{self.balance}'
+            else:
+                print("Bank is Bankrupt")
         else:
             return "Withdrawal amount exceeded"
 
